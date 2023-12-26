@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define MAX_USERS 10
 #define MAX_SCORES 5
@@ -56,7 +57,7 @@ void printTopScores(USER user) {
     printf("Top Five Scores:\n");
     int i;
 
-    for (i = 0; i < user.scoreCount; ++i) {
+    for (i = 0; i < 5; ++i) {
         printf("%d. %d\n", i + 1, user.scores[i]);
     }
 }
@@ -127,39 +128,46 @@ int main() {
                 }
                 break;
             case 2:
-                if (currentUserIndex != -1) {
-                    printGameInfo();
+                if (userCount >= MAX_USERS) {
+                    printf("Maximum number of users reached.\n");
                 } else {
-                    // Create Account
-                    if (userCount >= MAX_USERS) {
-                        printf("Maximum number of users reached.\n");
-                    } else {
-                        USER newUser;
+                    USER newUser;
 
-                        printf("Name: ");
-                        scanf("%s", newUser.name);
+                    // Get user information
+                    printf("Name: ");
+                    scanf("%s", newUser.name);
 
-                        printf("Last Name: ");
+                    printf("Last Name: ");
+                    scanf("%s", newUser.username);
+
+                    // Check if the username is already in use
+                    while (1) {
+                        int usernameTaken = 0;
+                        printf("Username: ");
                         scanf("%s", newUser.username);
 
                         for (i = 0; i < userCount; ++i) {
                             if (strcmp(newUser.username, users[i].username) == 0) {
                                 printf("This username is already in use. Please choose another one.\n");
-                                break;
+                                usernameTaken = 1;
                             }
                         }
 
-                        printf("Username: ");
-                        scanf("%s", newUser.username);
-
-                        printf("Password: ");
-                        scanf("%s", newUser.password);
-
-                        users[userCount++] = newUser;
-                        saveUsersToFile(users, userCount);
-
-                        printf("Account created successfully.\n");
+                        if (!usernameTaken) {
+                            break; // Break out of the loop if the username is unique
+                        }
                     }
+
+                    printf("Password: ");
+                    scanf("%s", newUser.password);
+
+                    // Add the new user to the array
+                    users[userCount++] = newUser;
+
+                    // Save users to file
+                    saveUsersToFile(users, userCount);
+
+                    printf("Account created successfully.\n");
                 }
                 break;
             case 3:
