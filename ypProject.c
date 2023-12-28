@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 
+
 #define MAX_USERS 10
 #define MAX_SCORES 5
 #define MAX_NAME_LENGTH 50
@@ -70,7 +71,7 @@ void printGameInfo() {
 
 void playGame() {
     printf("Starting the Game...\n");
-    // Add the game start code here.
+
 }
 
 int main() {

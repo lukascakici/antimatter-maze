@@ -6,6 +6,10 @@
 #define ROWS 6
 #define COLS 10
 
+typedef struct {
+
+}GAME;
+
 void printMatrix(char matrix[ROWS][COLS]) {
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
@@ -21,7 +25,7 @@ void moveUp(char matrix[ROWS][COLS], int *currentRow, int *currentCol, int *coun
     if (matrix[*currentRow][*currentCol] == 'E') {
         (*counter)++;
     }
-    if (matrix[*currentRow][*currentCol] == 'e') {
+    if(matrix[*currentRow][*currentCol] == 'e'){
         (*counter)++;
     }
     matrix[*currentRow][*currentCol] = 'X';
@@ -90,28 +94,27 @@ int main() {
         scanf(" %c", &direction);
 
         switch (direction) {
-            case 'u':
+            case 'w':
                 moveUp(matrix, &currentRow, &currentCol, &counter);
                 break;
-            case 'd':
+            case 's':
                 moveDown(matrix, &currentRow, &currentCol, &counter);
                 break;
-            case 'l':
+            case 'a':
                 moveLeft(matrix, &currentRow, &currentCol, &counter);
                 break;
-            case 'r':
+            case 'd':
                 moveRight(matrix, &currentRow, &currentCol, &counter);
                 break;
             case 'q':
                 printf("Quitting the program.\n");
                 break;
             default:
-                printf("Invalid direction. Please enter 'u', 'd', 'l', 'r', or 'q'.\n");
+                printf("Invalid direction. Please enter 'w', 'a', 's', 'd', or 'q'.\n");
                 break;
         }
 
         if (direction != 'q') {
-            system("cls"); // Use "cls" instead of "clear" on Windows
             printf("Updated Matrix:\n");
             printMatrix(matrix);
             printf("Elements passed by: %d\n", counter);
