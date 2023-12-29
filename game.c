@@ -77,26 +77,46 @@ void moveUp(char matrix[ROWS][COLS], int *currentRow, const int *currentCol) {
     if(matrix[(*currentRow - 1 + ROWS) % ROWS][*currentCol] != '1'){
         *currentRow = (*currentRow - 1 + ROWS) % ROWS;
     }
+    if(matrix[(*currentRow - 1 + ROWS) % ROWS][*currentCol] != 'C'){
+        printf("You have successfully reached the exit of the maze!");
+
+    }
     matrix[*currentRow][*currentCol] = 'X';
+
 }
 void moveDown(char matrix[ROWS][COLS], int *currentRow, const int *currentCol) {
     matrix[*currentRow][*currentCol] = '0';
-    if(matrix[(*currentRow + 1) % ROWS][*currentCol] != '1'){
+    if(matrix[(*currentRow + 1) % ROWS][*currentCol] != '1') {
         *currentRow = (*currentRow + 1) % ROWS;
     }
+    if(matrix[(*currentRow + 1) % ROWS][*currentCol] != 'C'){
+        printf("You have successfully reached the exit of the maze!");
+
+    }
     matrix[*currentRow][*currentCol] = 'X';
+
 }
 void moveLeft(char matrix[ROWS][COLS], const int *currentRow, int *currentCol) {
     matrix[*currentRow][*currentCol] = '0';
     if(matrix[*currentRow][(*currentCol - 1 + COLS) % COLS] != '1'){
         *currentCol = (*currentCol - 1 + COLS) % COLS;
     }
+    if(matrix[*currentRow][(*currentCol - 1 + COLS) % COLS] != 'C'){
+        printf("You have successfully reached the exit of the maze!");
+
+    }
     matrix[*currentRow][*currentCol] = 'X';
+
 }
 void moveRight(char matrix[ROWS][COLS], const int *currentRow, int *currentCol) {
     matrix[*currentRow][*currentCol] = '0';
     if(matrix[*currentRow][(*currentCol + 1) % COLS] != '1'){
         *currentCol = (*currentCol + 1) % COLS;
+
+    }
+    if(matrix[*currentRow][(*currentCol + 1) % COLS] != 'C'){
+        printf("You have successfully reached the exit of the maze!");
+
     }
     matrix[*currentRow][*currentCol] = 'X';
 }
@@ -156,16 +176,24 @@ void playGame(char matrix[ROWS][COLS]) {
 
         switch (direction) {
             case 'w':
-                moveUp(matrix, &currentRow, &currentCol);
+                if(currentRow != 0){
+                    moveUp(matrix, &currentRow, &currentCol);
+                }
                 break;
             case 's':
-                moveDown(matrix, &currentRow, &currentCol);
+                if(currentRow != ROWS-1){
+                    moveDown(matrix, &currentRow, &currentCol);
+                }
                 break;
             case 'a':
-                moveLeft(matrix, &currentRow, &currentCol);
+                if(currentCol != 0){
+                    moveLeft(matrix, &currentRow, &currentCol);
+                }
                 break;
             case 'd':
-                moveRight(matrix, &currentRow, &currentCol);
+                if(currentCol != COLS-1){
+                    moveRight(matrix, &currentRow, &currentCol);
+                }
                 break;
             case 'q':
                 printf("Quitting the program.\n");
@@ -178,7 +206,6 @@ void playGame(char matrix[ROWS][COLS]) {
         if (direction != 'q') {
             printf("Updated Matrix:\n");
             printMatrix(matrix);
-            printf("Elements passed by: %d\n", counter);
         }
 
     } while (direction != 'q');
