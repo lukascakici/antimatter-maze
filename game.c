@@ -77,7 +77,7 @@ void moveUp(char matrix[ROWS][COLS], int *currentRow, const int *currentCol) {
     if(matrix[(*currentRow - 1 + ROWS) % ROWS][*currentCol] != '1'){
         *currentRow = (*currentRow - 1 + ROWS) % ROWS;
     }
-    if(matrix[(*currentRow - 1 + ROWS) % ROWS][*currentCol] != 'C'){
+    if(matrix[(*currentRow - 1 + ROWS) % ROWS][*currentCol] == 'C'){
         printf("You have successfully reached the exit of the maze!");
 
     }
@@ -89,7 +89,7 @@ void moveDown(char matrix[ROWS][COLS], int *currentRow, const int *currentCol) {
     if(matrix[(*currentRow + 1) % ROWS][*currentCol] != '1') {
         *currentRow = (*currentRow + 1) % ROWS;
     }
-    if(matrix[(*currentRow + 1) % ROWS][*currentCol] != 'C'){
+    if(matrix[(*currentRow + 1) % ROWS][*currentCol] == 'C'){
         printf("You have successfully reached the exit of the maze!");
 
     }
@@ -101,7 +101,7 @@ void moveLeft(char matrix[ROWS][COLS], const int *currentRow, int *currentCol) {
     if(matrix[*currentRow][(*currentCol - 1 + COLS) % COLS] != '1'){
         *currentCol = (*currentCol - 1 + COLS) % COLS;
     }
-    if(matrix[*currentRow][(*currentCol - 1 + COLS) % COLS] != 'C'){
+    if(matrix[*currentRow][(*currentCol - 1 + COLS) % COLS] == 'C'){
         printf("You have successfully reached the exit of the maze!");
 
     }
@@ -114,7 +114,7 @@ void moveRight(char matrix[ROWS][COLS], const int *currentRow, int *currentCol) 
         *currentCol = (*currentCol + 1) % COLS;
 
     }
-    if(matrix[*currentRow][(*currentCol + 1) % COLS] != 'C'){
+    if(matrix[*currentRow][(*currentCol + 1) % COLS] == 'C'){
         printf("You have successfully reached the exit of the maze!");
 
     }
