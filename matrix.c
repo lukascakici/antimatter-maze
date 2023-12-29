@@ -1,14 +1,51 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+
 
 #define ROWS 6
 #define COLS 10
 
 typedef struct {
 
-}GAME;
+}MAP;
+
+
+/*
+int rowColNum() {
+    FILE *dosya;
+    char karakter;
+    int satir_sayisi = 1, eleman_sayisi = 0, sutun_sayisi;
+
+    // Dosyayı aç
+    dosya = fopen("map.txt", "r");
+
+    // Dosya açıldıysa işlemleri yap
+    if (dosya != NULL) {
+        while ((karakter = fgetc(dosya)) != EOF) {
+            // Karakter '\n' (newline) ise satır sayısını artır
+            if (karakter == '\n') {
+                satir_sayisi++;
+            }
+                // Boşluk, tab veya yeni satır olmayan diğer karakterlerse eleman sayısını artır
+            else if (karakter != ' ' && karakter != '\t') {
+                eleman_sayisi++;
+            }
+        }
+
+        sutun_sayisi = eleman_sayisi / satir_sayisi;
+        // Dosyayı kapat
+        fclose(dosya);
+
+
+    } else {
+        // Dosya açılamadıysa hata mesajını yazdır
+        printf("Dosya acilamadi!\n");
+    }
+}
+*/
+
+
+
 
 void printMatrix(char matrix[ROWS][COLS]) {
     for (int i = 0; i < ROWS; i++) {
@@ -19,42 +56,27 @@ void printMatrix(char matrix[ROWS][COLS]) {
     }
 }
 
-void moveUp(char matrix[ROWS][COLS], int *currentRow, int *currentCol, int *counter) {
+void moveUp(char matrix[ROWS][COLS], int *currentRow, const int *currentCol) {
     matrix[*currentRow][*currentCol] = '0';
     *currentRow = (*currentRow - 1 + ROWS) % ROWS;
-    if (matrix[*currentRow][*currentCol] == 'E') {
-        (*counter)++;
-    }
-    if(matrix[*currentRow][*currentCol] == 'e'){
-        (*counter)++;
-    }
     matrix[*currentRow][*currentCol] = 'X';
 }
 
-void moveDown(char matrix[ROWS][COLS], int *currentRow, int *currentCol, int *counter) {
+void moveDown(char matrix[ROWS][COLS], int *currentRow, const int *currentCol) {
     matrix[*currentRow][*currentCol] = '0';
     *currentRow = (*currentRow + 1) % ROWS;
-    if (matrix[*currentRow][*currentCol] == 'E' || matrix[*currentRow][*currentCol] == 'e') {
-        (*counter)++;
-    }
     matrix[*currentRow][*currentCol] = 'X';
 }
 
-void moveLeft(char matrix[ROWS][COLS], int *currentRow, int *currentCol, int *counter) {
+void moveLeft(char matrix[ROWS][COLS], const int *currentRow, int *currentCol) {
     matrix[*currentRow][*currentCol] = '0';
     *currentCol = (*currentCol - 1 + COLS) % COLS;
-    if (matrix[*currentRow][*currentCol] == 'E' || matrix[*currentRow][*currentCol] == 'e') {
-        (*counter)++;
-    }
     matrix[*currentRow][*currentCol] = 'X';
 }
 
-void moveRight(char matrix[ROWS][COLS], int *currentRow, int *currentCol, int *counter) {
+void moveRight(char matrix[ROWS][COLS], const int *currentRow, int *currentCol) {
     matrix[*currentRow][*currentCol] = '0';
     *currentCol = (*currentCol + 1) % COLS;
-    if (matrix[*currentRow][*currentCol] == 'E' || matrix[*currentRow][*currentCol] == 'e') {
-        (*counter)++;
-    }
     matrix[*currentRow][*currentCol] = 'X';
 }
 
@@ -75,6 +97,24 @@ void loadMatrixFromFile(char matrix[ROWS][COLS], const char *filename) {
     fclose(file);
 }
 
+/*
+int** matrix(int satir, int sutun) {
+    int** matrix = (int **)malloc(satir * sizeof(int *));
+    for (int i = 0; i < satir; i++) {
+        matrix[i] = (int *)malloc(sutun * sizeof(int));
+    }
+    return matrix;
+}
+
+void freeMat(int** matrix, int satir) {
+    for (int i = 0; i < satir; i++) {
+        free(matrix[i]);
+    }
+    free(matrix);
+}
+*/
+
+
 int main() {
     char matrix[ROWS][COLS];
 
@@ -86,6 +126,8 @@ int main() {
 
     char direction;
 
+
+
     printf("Initial Matrix:\n");
     printMatrix(matrix);
 
@@ -95,16 +137,16 @@ int main() {
 
         switch (direction) {
             case 'w':
-                moveUp(matrix, &currentRow, &currentCol, &counter);
+                moveUp(matrix, &currentRow, &currentCol);
                 break;
             case 's':
-                moveDown(matrix, &currentRow, &currentCol, &counter);
+                moveDown(matrix, &currentRow, &currentCol);
                 break;
             case 'a':
-                moveLeft(matrix, &currentRow, &currentCol, &counter);
+                moveLeft(matrix, &currentRow, &currentCol);
                 break;
             case 'd':
-                moveRight(matrix, &currentRow, &currentCol, &counter);
+                moveRight(matrix, &currentRow, &currentCol);
                 break;
             case 'q':
                 printf("Quitting the program.\n");
