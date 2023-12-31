@@ -108,6 +108,7 @@ void moveLeft(char matrix[ROWS][COLS], const int *currentRow, int *currentCol) {
     matrix[*currentRow][*currentCol] = 'X';
 
 }
+
 void moveRight(char matrix[ROWS][COLS], const int *currentRow, int *currentCol) {
     matrix[*currentRow][*currentCol] = '0';
     if(matrix[*currentRow][(*currentCol + 1) % COLS] != '1'){
@@ -120,6 +121,7 @@ void moveRight(char matrix[ROWS][COLS], const int *currentRow, int *currentCol) 
     }
     matrix[*currentRow][*currentCol] = 'X';
 }
+
 
 void loadUsersFromFile(USER users[], int *userCount) {
     FILE *file = fopen("users.bin", "rb");
