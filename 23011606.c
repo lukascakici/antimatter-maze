@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,6 +20,39 @@ typedef struct{
     int exitReached;
 
 }GAME;
+
+/*
+int play(){
+    GameMap gameMap;
+    initializeMap(&gameMap, "map.txt");
+
+    gameMap.collectedP = 0;
+    gameMap.collectedp = 0;
+    gameMap.collectedE = 0;
+    gameMap.collectede = 0;
+
+    // Game loop
+    char move;
+    do {
+        displayMap(&gameMap);
+        printf("Enter your move (W/A/S/D): ");
+        scanf(" %c", &move);
+
+        // Check time limit
+        time_t currentTime = time(NULL);
+        if (currentTime - gameMap.startTime >= gameMap.timeLimit) {
+            printf("Time's up!\n");
+            break;
+        }
+    } while (moveUser(&gameMap, move));
+
+    printResults(&gameMap);
+
+    freeMap(&gameMap);
+
+    return 0;
+}
+ */
 
 // Kullanıcı fonksiyonları
 void createAccount(USER *user);

@@ -4,6 +4,7 @@
 #include <conio.h>
 #include <stdbool.h>
 #include <time.h>
+#include <unistd.h>
 
 
 #define MAX_USERS 10
@@ -25,17 +26,18 @@ typedef struct User {
 //oyunda kullanmak icin oyun haritasini belirten struct yapisi
 typedef struct {
     char **matrix; // 2 boyutlu matris
-    int rows;
-    int cols;
+    int rows; //haritanin satir sayisi
+    int cols; //haritanin sutun sayisi
     int userRow; //o an kullanicinin oldugu satir
     int userCol; //o an kullanicinin oldugu sutun
     int collectedP; // toplanan Proton(P) sayisi
     int collectedp; // toplanan karsit proton(p) sayisi
     int collectede; // toplanan elektron(e) sayisi
     int collectedE; // toplanan karsit elektron(E) sayisi
-    int antihydrogen;
-    time_t startTime;
-    int timeLimit;
+    int antihydrogen; //karist proton ve karsit elektronlarla olusturulan karsit hidrojen sayisi
+    time_t startTime; //zaman limiti icin oyun basladigi anki sureyi temsil ediyor
+    int timeLimit;  // belirledigimiz sure limiti
+    int autoplay; //otomatik oynama modunun secilip secilmediginin belirteci
 } GameMap;
 
 
@@ -53,6 +55,7 @@ void initializeMap(GameMap *gameMap, const char *filename); //dosyadan okunan ha
 void displayMap(const GameMap *gameMap); //haritayi bastiran fonksiyon
 void freeMap(GameMap *gameMap); //dinamik olarak bellekte ayrilan yerlerin temizlenmesi icin gereken fonksiyon
 void printResults(const GameMap *gameMap); //toplanan parcaciklar ve olusturulan karsit hidrojen sayisini bastiran fonksiyon
+char autoplayMove(const GameMap *gameMap); //otomatik oynama modu
 
 
 
@@ -225,6 +228,15 @@ void readUserData(USER users[], int *userCount) {
     fclose(file);
 }
 
+char autoplayMove(const GameMap *gameMap) {
+    // rastgele bir yön seçip ilerleyecek
+    char directions[] = {'W', 'A', 'S', 'D'};
+    int numDirections = sizeof(directions) / sizeof(directions[0]);
+    char nextMove = directions[rand() % numDirections];
+
+    return nextMove;
+}
+
 void writeUserData(const USER users[], int userCount) {
     int i, j;
     FILE *file = fopen("user_data.txt", "w");
@@ -293,14 +305,12 @@ void initializeMap(GameMap *gameMap, const char *filename) {
 void displayMap(const GameMap *gameMap) {
     printf("\n");
     int i, j;
-    // Display the map
     for (i = 0; i < gameMap->rows; i++) {
         for (j = 0; j < gameMap->cols; j++) {
             printf("%c ", gameMap->matrix[i][j]);
         }
         printf("\n");
     }
-
     printf("\n");
 }
 
@@ -311,22 +321,22 @@ bool moveUser(GameMap *gameMap, char move) {
     switch (move) {
         case 'W':
         case 'w':
-        case 72:  // Up arrow key
+        case 72:  // yukari yonlu ok tusu
             newRow--;
             break;
         case 'A':
         case 'a':
-        case 75:  // Left arrow key
+        case 75:  // sol yonlu ok tusu
             newCol--;
             break;
         case 'S':
         case 's':
-        case 80:  // Down arrow key
+        case 80:  // asagi yonlu ok tusu
             newRow++;
             break;
         case 'D':
         case 'd':
-        case 77:  // Right arrow key
+        case 77:  // sag yonlu ok tusu
             newCol++;
             break;
         default:
@@ -347,27 +357,27 @@ bool moveUser(GameMap *gameMap, char move) {
         gameMap->collectede++;
     }
 
-    // Check for boundaries and collisions with walls
+    // kullanicinin harita sinirlarindan disari cikmamasi ve duvarlardan gecmemesi icin kontrol
     if (newRow >= 0 && newRow < gameMap->rows && newCol >= 0 && newCol < gameMap->cols &&
         gameMap->matrix[newRow][newCol] != '1') {
         char currentCell = gameMap->matrix[newRow][newCol];
 
-        // Update user position
+        // kullanicinin oldugu noktayi guncellemek
         gameMap->matrix[gameMap->userRow][gameMap->userCol] = ' ';
         gameMap->userRow = newRow;
         gameMap->userCol = newCol;
         gameMap->matrix[gameMap->userRow][gameMap->userCol] = 'X';
 
-        // Check if the user reached the exit points
+        // kullanici karadelik ya da cikis noktasina ulasti mi diye kontrol etme
         if (currentCell == 'K' || currentCell == 'C') {
             printf("Congratulations! You reached the exit.\n");
-            return false;  // Game over
+            return false; // oyun biter
         }
     } else {
         printf("Invalid move. Stay within the boundaries or avoid walls.\n");
     }
 
-    return true;  // Continue the game
+    return true; //oyun devam eder
 }
 
 void freeMap(GameMap *gameMap) {
@@ -379,8 +389,16 @@ void freeMap(GameMap *gameMap) {
     free(gameMap->matrix);
 }
 
-int play(){
+int play() {
     GameMap gameMap;
+
+    int choice;
+    printf("Choose your play mode:\n");
+    printf("1. Play manually\n");
+    printf("2. Autoplay\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+
     initializeMap(&gameMap, "map.txt");
 
     gameMap.collectedP = 0;
@@ -388,20 +406,35 @@ int play(){
     gameMap.collectedE = 0;
     gameMap.collectede = 0;
 
+    //kullanicinin oynama sekli secimi
+    if (choice == 2) {
+        gameMap.autoplay = 1;  // otomatik oynama modunu aktiflestir
+    }else{
+        gameMap.autoplay = 0;
+    }
+
     // Game loop
     char move;
-    do {
+    do{
         displayMap(&gameMap);
-        printf("Enter your move (W/A/S/D): ");
-        scanf(" %c", &move);
 
-        // Check time limit
+        if (gameMap.autoplay) {
+            move = autoplayMove(&gameMap);
+            //100.000 = 0.1 saniye olacak şekilde
+            usleep(700000);
+        } else {
+            printf("Enter your move (W/A/S/D): ");
+            scanf(" %c", &move);
+        }
+
+        // sure sinirini kontrol etme
         time_t currentTime = time(NULL);
         if (currentTime - gameMap.startTime >= gameMap.timeLimit) {
             printf("Time's up!\n");
-            break;
+            break; // eger sure dolduysa bir sonraki harekette oyunu bitir
         }
-    } while (moveUser(&gameMap, move));
+
+    }while(moveUser(&gameMap, move));
 
     printResults(&gameMap);
 
@@ -411,25 +444,23 @@ int play(){
 }
 
 void printResults(const GameMap *gameMap) {
-    printf("\nGame Over!\n");
+    printf("\n");
     printf("Collected 'P': %d\n", gameMap->collectedP);
     printf("Collected 'p': %d\n", gameMap->collectedp);
     printf("Collected 'E': %d\n", gameMap->collectedE);
     printf("Collected 'e': %d\n", gameMap->collectede);
 
-    // Subtract 'P' from 'p' and 'E' from 'e'
-
+    // karsit protondan, proton sayisini ; karsit elektrondan elektron sayisini cikart
     int remainingp = gameMap->collectedp - gameMap->collectedP;
     if((gameMap->collectedp - gameMap->collectedP) < 0){
         remainingp = 0;
     }
-
     int remainingE = gameMap->collectedE - gameMap->collectede;
     if((gameMap->collectedE - gameMap->collectede) < 0){
         remainingE = 0;
     }
 
-    // Create antihydrogen with remaining 'p' and 'E'
+    // kalan karsit elektron ve karsit proton sayilarina gore karsit hidrojen sayisini belirle
     int antihydrogen = remainingp < remainingE ? remainingp : remainingE;
 
     printf("\nAntihydrogen created: %d\n", antihydrogen);
