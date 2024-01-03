@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//#include <conio.h>
 #include <stdbool.h>
 #include <time.h>
 #include <unistd.h>
 #include <math.h>
+//#include <conio.h>
+
 
 #define MAX_USERS 10
 #define MAX_NAME_LENGTH 30
@@ -58,7 +59,7 @@ void displayMap(const GameMap *gameMap); //haritayi bastiran fonksiyon
 void freeMap(GameMap *gameMap); //dinamik olarak bellekte ayrilan yerlerin temizlenmesi icin gereken fonksiyon
 void printResults(const GameMap *gameMap); //toplanan parcaciklar ve olusturulan karsit hidrojen sayisini bastiran fonksiyon
 char autoplayMove(const GameMap *gameMap); //otomatik oynama modu
-void info();
+void info(); // oyun hakkinda bilgileri ekrana bastirir
 
 
 
