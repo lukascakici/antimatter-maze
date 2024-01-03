@@ -5,13 +5,14 @@
 #include <stdbool.h>
 #include <time.h>
 #include <unistd.h>
-
+#include <math.h>
 
 #define MAX_USERS 10
 #define MAX_NAME_LENGTH 30
 #define MAX_USERNAME_LENGTH 20
 #define MAX_PASSWORD_LENGTH 20
 #define MAX_SCORES 5
+#define MAX_SCORE 500
 
 // kullanici bilgilerini tutan structure yapisi
 typedef struct User {
@@ -57,7 +58,6 @@ void displayMap(const GameMap *gameMap); //haritayi bastiran fonksiyon
 void freeMap(GameMap *gameMap); //dinamik olarak bellekte ayrilan yerlerin temizlenmesi icin gereken fonksiyon
 void printResults(const GameMap *gameMap); //toplanan parcaciklar ve olusturulan karsit hidrojen sayisini bastiran fonksiyon
 char autoplayMove(const GameMap *gameMap); //otomatik oynama modu
-void updateScore(USER *user, int score);
 
 
 
@@ -190,7 +190,7 @@ int showLoggedInMenu(USER users[], int currentUserIndex) {
 
     switch (choice) {
         case 1:
-            // Add code for viewing top scores
+            //score
             break;
         case 2:
             // Add code for getting game information
@@ -446,8 +446,6 @@ int play() {
     }while(moveUser(&gameMap, move));
 
     printResults(&gameMap);
-
-    //updateScore(user, gameMap.currentScore);
 
     freeMap(&gameMap);
 
