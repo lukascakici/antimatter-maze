@@ -90,7 +90,6 @@ int main() {
                     break;
                 case 3:
                     info();
-                    usleep(1000000);
                     break;
                 case 4:
                     printf("Exiting the game. Goodbye!\n");
@@ -105,8 +104,18 @@ int main() {
 }
 
 void info(){
-    printf("info about the game\n");
-    printf("\n");
+    printf("WELCOME TO THE ANTIMATTER MAZE!\n");
+    printf("The paths in the maze contain the following particles.\n");
+    printf("P : proton\n"
+           "p : anti-proton\n"
+           "e : electron\n"
+           "E : anti-electron\n");
+    printf("To produce anti-hydrogen, you only need to have p and E particles at the exit of the maze.\n");
+    printf("If a particle and its antiparticle come together, they annihilate each other.\n");
+    printf("Black holes are indicated by K. If you pass through black holes, the game ends\n");
+    printf("Walls are indicated by 1 and it is not possible to pass through the walls\n");
+    printf("To move around the maze use 'w' 'a' 's' 'd' keys.\n");
+    usleep(10000000);
 }
 int showMainMenu() {
     int choice;
