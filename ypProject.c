@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <conio.h>
+//#include <conio.h>
 #include <stdbool.h>
 #include <time.h>
 #include <unistd.h>
@@ -38,6 +38,7 @@ typedef struct {
     time_t startTime; //zaman limiti icin oyun basladigi anki sureyi temsil ediyor
     int timeLimit;  // belirledigimiz sure limiti
     int autoplay; //otomatik oynama modunun secilip secilmediginin belirteci
+    int currentScore;
 } GameMap;
 
 
@@ -56,6 +57,7 @@ void displayMap(const GameMap *gameMap); //haritayi bastiran fonksiyon
 void freeMap(GameMap *gameMap); //dinamik olarak bellekte ayrilan yerlerin temizlenmesi icin gereken fonksiyon
 void printResults(const GameMap *gameMap); //toplanan parcaciklar ve olusturulan karsit hidrojen sayisini bastiran fonksiyon
 char autoplayMove(const GameMap *gameMap); //otomatik oynama modu
+void updateScore(USER *user, int score);
 
 
 
@@ -228,15 +230,6 @@ void readUserData(USER users[], int *userCount) {
     fclose(file);
 }
 
-char autoplayMove(const GameMap *gameMap) {
-    // rastgele bir yön seçip ilerleyecek
-    char directions[] = {'W', 'A', 'S', 'D'};
-    int numDirections = sizeof(directions) / sizeof(directions[0]);
-    char nextMove = directions[rand() % numDirections];
-
-    return nextMove;
-}
-
 void writeUserData(const USER users[], int userCount) {
     int i, j;
     FILE *file = fopen("user_data.txt", "w");
@@ -321,23 +314,39 @@ bool moveUser(GameMap *gameMap, char move) {
     switch (move) {
         case 'W':
         case 'w':
-        case 72:  // yukari yonlu ok tusu
-            newRow--;
+        case 72:// yukari yonlu ok tusu
+            if(gameMap->userRow != 0){
+                newRow--;
+            }else{
+                printf("Invalid move. Stay within the boundaries or avoid walls.\n");
+            }
             break;
         case 'A':
         case 'a':
         case 75:  // sol yonlu ok tusu
-            newCol--;
+            if(gameMap->userCol != 0){
+                newCol--;
+            }else{
+                printf("Invalid move. Stay within the boundaries or avoid walls.\n");
+            }
             break;
         case 'S':
         case 's':
         case 80:  // asagi yonlu ok tusu
-            newRow++;
+            if(gameMap->userRow != gameMap->rows-1){
+                newRow++;
+            }else{
+                printf("Invalid move. Stay within the boundaries or avoid walls.\n");
+            }
             break;
         case 'D':
         case 'd':
         case 77:  // sag yonlu ok tusu
-            newCol++;
+            if(gameMap->userCol != gameMap->cols){
+                newCol++;
+            }else{
+                printf("Invalid move. Stay within the boundaries or avoid walls.\n");
+            }
             break;
         default:
             printf("Invalid move. Use W/A/S/D or arrow keys.\n");
@@ -438,9 +447,20 @@ int play() {
 
     printResults(&gameMap);
 
+    //updateScore(user, gameMap.currentScore);
+
     freeMap(&gameMap);
 
     return 0;
+}
+
+char autoplayMove(const GameMap *gameMap) {
+    // rastgele bir yön seçip ilerleyecek
+    char directions[] = {'W', 'A', 'S', 'D'};
+    int numDirections = sizeof(directions) / sizeof(directions[0]);
+    char nextMove = directions[rand() % numDirections];
+
+    return nextMove;
 }
 
 void printResults(const GameMap *gameMap) {
