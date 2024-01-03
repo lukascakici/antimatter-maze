@@ -58,6 +58,7 @@ void displayMap(const GameMap *gameMap); //haritayi bastiran fonksiyon
 void freeMap(GameMap *gameMap); //dinamik olarak bellekte ayrilan yerlerin temizlenmesi icin gereken fonksiyon
 void printResults(const GameMap *gameMap); //toplanan parcaciklar ve olusturulan karsit hidrojen sayisini bastiran fonksiyon
 char autoplayMove(const GameMap *gameMap); //otomatik oynama modu
+void info();
 
 
 
@@ -88,23 +89,32 @@ int main() {
                     writeUserData(users, userCount);
                     break;
                 case 3:
+                    info();
+                    usleep(1000000);
+                    break;
+                case 4:
                     printf("Exiting the game. Goodbye!\n");
                     break;
                 default:
                     printf("Invalid choice. Please try again.\n");
             }
         }
-    } while (choice != 3);
+    } while (choice != 4);
 
     return 0;
 }
 
+void info(){
+    printf("info about the game\n");
+    printf("\n");
+}
 int showMainMenu() {
     int choice;
     printf("===== Antimatter Maze Main Menu =====\n");
     printf("1. Login\n");
     printf("2. Create Account\n");
-    printf("3. Exit\n");
+    printf("3. Get Game Information\n");
+    printf("4. Exit\n");
     printf("Enter your choice: ");
     scanf("%d", &choice);
     return choice;
@@ -181,9 +191,8 @@ int showLoggedInMenu(USER users[], int currentUserIndex) {
 
     printf("\n");
     printf("1. View Top Scores\n");
-    printf("2. Get Game Information\n");
-    printf("3. Play the Game\n");
-    printf("4. Logout (%s)\n", users[currentUserIndex].name);
+    printf("2. Play the Game\n");
+    printf("3. Logout (%s)\n", users[currentUserIndex].name);
 
     printf("Enter your choice: ");
     scanf("%d", &choice);
@@ -193,12 +202,9 @@ int showLoggedInMenu(USER users[], int currentUserIndex) {
             //score
             break;
         case 2:
-            // Add code for getting game information
-            break;
-        case 3:
             play(); //oyunu baslatma fonksiyonu
             break;
-        case 4:
+        case 3:
             printf("Logging out. Goodbye, %s!\n", users[currentUserIndex].name);
             return 1;
         default:
