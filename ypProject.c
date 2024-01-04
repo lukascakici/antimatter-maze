@@ -4,8 +4,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include <unistd.h>
-#include <math.h>
-//#include <conio.h>
+#include <conio.h>
 
 
 #define MAX_USERS 10
@@ -13,7 +12,6 @@
 #define MAX_USERNAME_LENGTH 20
 #define MAX_PASSWORD_LENGTH 20
 #define MAX_SCORES 5
-#define MAX_SCORE 500
 
 // kullanici bilgilerini tutan structure yapisi
 typedef struct User {
@@ -40,7 +38,6 @@ typedef struct {
     time_t startTime; //zaman limiti icin oyun basladigi anki sureyi temsil ediyor
     int timeLimit;  // belirledigimiz sure limiti
     int autoplay; //otomatik oynama modunun secilip secilmediginin belirteci
-    int currentScore;
 } GameMap;
 
 
@@ -118,6 +115,7 @@ void info(){
     printf("To move around the maze use 'w' 'a' 's' 'd' keys.\n");
     usleep(10000000);
 }
+
 int showMainMenu() {
     int choice;
     printf("===== Antimatter Maze Main Menu =====\n");

@@ -1,0 +1,6 @@
+arascakici 10
+1234 10
+john.doe 100
+john.doe 100
+1234 -389519872
+asd 80
