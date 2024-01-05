@@ -1,0 +1,3 @@
+lukas 320
+lukas 400
+aras 240

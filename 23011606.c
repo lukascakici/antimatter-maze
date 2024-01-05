@@ -98,6 +98,7 @@ int main() {
         }
     } while (choice != 4);
 
+    system("pause");
     return 0;
 }
 
@@ -136,7 +137,7 @@ void info(){
 
 int showMainMenu() {
     int choice;
-    printf("===== Antimatter Maze Main Menu =====\n");
+    printf("\n===== Antimatter Maze Main Menu =====\n");
     printf("1. Login\n");
     printf("2. Create Account\n");
     printf("3. Get Game Information\n");
@@ -419,6 +420,7 @@ void freeMap(GameMap *gameMap) {
 }
 
 int play(USER *user) {
+
     GameMap gameMap;
 
     int choice;
@@ -443,6 +445,8 @@ int play(USER *user) {
         gameMap.autoplay = 0;
     }
 
+    system("cls");
+
     // Game loop
     char move;
     do{
@@ -463,7 +467,7 @@ int play(USER *user) {
             printf("Time's up!\n");
             break; // eger sure dolduysa bir sonraki harekette oyunu bitir
         }
-
+        system("cls");
     }while(moveUser(&gameMap, move));
 
     printResults(&gameMap);
@@ -512,7 +516,7 @@ void printResults(GameMap *gameMap) {
 void printTopScores() {
     FILE *file;
 
-    // Open the file in text mode for reading
+    // dosyayi ac
     file = fopen("scores.txt", "r");
 
     if (file == NULL) {
@@ -524,22 +528,21 @@ void printTopScores() {
     USER topScores[MAX_SCORES];
     int i, j;
 
-    // Initialize topScores array with default values
     for (i = 0; i < MAX_SCORES; i++) {
         strcpy(topScores[i].username, "");
         topScores[i].score = 0;
     }
 
-    // Read each line from the file and update topScores
+    // tum satirlari oku ve skorlari güncelle
     while (fscanf(file, "%s %d", user.username, &user.score) != EOF) {
         for (i = 0; i < MAX_SCORES; i++) {
             if (user.score > topScores[i].score) {
-                // Shift down the lower scores
+
                 for (j = MAX_SCORES - 1; j > i; j--) {
                     strcpy(topScores[j].username, topScores[j - 1].username);
                     topScores[j].score = topScores[j - 1].score;
                 }
-                // Insert the new top score
+
                 strcpy(topScores[i].username, user.username);
                 topScores[i].score = user.score;
                 break;
@@ -547,13 +550,12 @@ void printTopScores() {
         }
     }
 
-    // Print the top 5 scores
+    // en yuksek 5 skoru yazdir
     printf("\nTop 5 Scores:\n");
     for (i = 0; i < MAX_SCORES; i++) {
         printf("%d. %s: %d\n", i + 1, topScores[i].username, topScores[i].score);
     }
 
-    // Close the file
     fclose(file);
 }
 
