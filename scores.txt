@@ -1,7 +1,9 @@
 arascakici 10
 1234 10
-john.doe 100
-john.doe 100
-1234 -389519872
 asd 80
 cahit 80
+aras 80
+asdf 80
+sdlkfjdkfj 200012345 80
+12345 80
+asdf 400

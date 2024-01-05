@@ -53,7 +53,7 @@ bool moveUser(GameMap *gameMap, char move); //harita uzerinde hareket etme fonks
 void initializeMap(GameMap *gameMap, const char *filename); //dosyadan okunan haritayi initialize eden fonksiyon
 void displayMap(const GameMap *gameMap); //haritayi bastiran fonksiyon
 void freeMap(GameMap *gameMap); //dinamik olarak bellekte ayrilan yerlerin temizlenmesi icin gereken fonksiyon
-void printResults(const GameMap *gameMap); //toplanan parcaciklar ve olusturulan karsit hidrojen sayisini bastiran fonksiyon
+void printResults(GameMap *gameMap); //toplanan parcaciklar ve olusturulan karsit hidrojen sayisini bastiran fonksiyon
 char autoplayMove(const GameMap *gameMap); //otomatik oynama modu
 void info(); // oyun hakkinda bilgileri ekrana bastirir
 void writeScoreToFile(const USER *user);
@@ -161,7 +161,7 @@ void login(USER users[], int *loggedInUser, int *userCount) {
     for (i = 0; i < *userCount; ++i) {
         if (strcmp(users[i].username, username) == 0 && strcmp(users[i].password, password) == 0) {
             *loggedInUser = i;
-            printf("Login successful! Welcome, %s!\n", username);
+            printf("\nLogin successful! Welcome, %s!\n", username);
             return;
         }
     }
@@ -399,7 +399,7 @@ bool moveUser(GameMap *gameMap, char move) {
 
         // kullanici karadelik ya da cikis noktasina ulasti mi diye kontrol etme
         if (currentCell == 'K' || currentCell == 'C') {
-            printf("Congratulations! You reached the exit.\n");
+            printf("\nCongratulations! You reached the exit.\n");
             return false; // oyun biter
         }
     } else {
@@ -422,7 +422,7 @@ int play(USER *user) {
     GameMap gameMap;
 
     int choice;
-    printf("Choose your play mode:\n");
+    printf("\nChoose your play mode:\n");
     printf("1. Play manually\n");
     printf("2. Autoplay\n");
     printf("Enter your choice: ");
@@ -434,6 +434,7 @@ int play(USER *user) {
     gameMap.collectedp = 0;
     gameMap.collectedE = 0;
     gameMap.collectede = 0;
+    gameMap.antihydrogen = 0;
 
     //kullanicinin oynama sekli secimi
     if (choice == 2) {
@@ -465,10 +466,10 @@ int play(USER *user) {
 
     }while(moveUser(&gameMap, move));
 
+    printResults(&gameMap);
+
     user->score = calculateScore(gameMap);
     writeScoreToFile(user);
-
-    printResults(&gameMap);
 
     freeMap(&gameMap);
 
@@ -484,7 +485,7 @@ char autoplayMove(const GameMap *gameMap) {
     return nextMove;
 }
 
-void printResults(const GameMap *gameMap) {
+void printResults(GameMap *gameMap) {
     printf("\n");
     printf("Collected 'P': %d\n", gameMap->collectedP);
     printf("Collected 'p': %d\n", gameMap->collectedp);
@@ -503,6 +504,7 @@ void printResults(const GameMap *gameMap) {
 
     // kalan karsit elektron ve karsit proton sayilarina gore karsit hidrojen sayisini belirle
     int antihydrogen = remainingp < remainingE ? remainingp : remainingE;
+    gameMap->antihydrogen = antihydrogen;
 
     printf("\nAntihydrogen created: %d\n", antihydrogen);
 }
@@ -546,9 +548,9 @@ void printTopScores() {
     }
 
     // Print the top 5 scores
-    printf("Top 5 Scores:\n");
+    printf("\nTop 5 Scores:\n");
     for (i = 0; i < MAX_SCORES; i++) {
-        printf("%d. Username: %s, Score: %d\n", i + 1, topScores[i].username, topScores[i].score);
+        printf("%d. %s: %d\n", i + 1, topScores[i].username, topScores[i].score);
     }
 
     // Close the file
@@ -557,7 +559,7 @@ void printTopScores() {
 
 int calculateScore(GameMap gameMap){
 
-    int score = gameMap.rows * gameMap.cols;
+    int score = gameMap.rows * gameMap.cols * (gameMap.collectedp + gameMap.collectedE);
     return score;
 
 }
