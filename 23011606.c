@@ -243,7 +243,7 @@ int showLoggedInMenu(USER users[], int currentUserIndex) {
 
 void readUserData(USER users[], int *userCount) {
     int i;
-    FILE *file = fopen("deneme.txt", "rb");
+    FILE *file = fopen("user_data.txt", "rb");
     if (file == NULL) {
         return;
     }
@@ -260,9 +260,9 @@ void readUserData(USER users[], int *userCount) {
 
 void writeUserData(const USER users[], int userCount) {
     int i;
-    FILE *file = fopen("deneme.txt", "wb");
+    FILE *file = fopen("user_data.txt", "wb");
     if (file == NULL) {
-        printf("Error opening deneme.txt for writing.\n");
+        printf("Error opening user_data.txt for writing.\n");
         return;
     }
 
