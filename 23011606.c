@@ -4,7 +4,9 @@
 #include <stdbool.h>
 #include <time.h>
 #include <unistd.h>
-#include <conio.h>
+#ifdef _WIN32
+    #include <conio.h>
+#endif
 
 
 #define MAX_USERS 10
