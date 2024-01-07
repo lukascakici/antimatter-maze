@@ -493,10 +493,52 @@ int play(USER *user) {
 }
 
 char autoplayMove(const GameMap *gameMap) {
-    // rastgele bir yön seçip ilerleyecek
+    // rastgele bir yon secicek
     char directions[] = {'W', 'A', 'S', 'D'};
-    int numDirections = sizeof(directions) / sizeof(directions[0]);
-    char nextMove = directions[rand() % numDirections];
+
+    char nextMove = directions[rand() % 4];
+
+    //eger rastgele secilen yon yukari ise yukariyi kontrol et, duvar varsa yukari haric bir sey gelene kadar tekrar sectir
+    if(nextMove == 'W'){
+        if(gameMap->matrix[gameMap->userRow - 1][gameMap->userCol] != '1'){
+            nextMove = 'W';
+        }else{
+            do {
+                nextMove = directions[rand() % 4];
+            }while(nextMove == 'W');
+
+        }
+    }
+    //eger rastgele secilen yon sola ise solu kontrol et, duvar varsa sol haric bir sey gelene kadar tekrar sectir
+    if(nextMove == 'A'){
+        if(gameMap->matrix[gameMap->userRow][gameMap->userCol - 1] != '1'){
+            nextMove = 'A';
+        }else{
+            do {
+                nextMove = directions[rand() % 4];
+            }while(nextMove == 'A');
+        }
+    }
+    //eger rastgele secilen yon asagi ise asagiyi kontrol et, duvar varsa asagi haric bir sey gelene kadar tekrar sectir
+    if(nextMove == 'S'){
+        if(gameMap->matrix[gameMap->userRow + 1][gameMap->userCol] != '1'){
+            nextMove = 'S';
+        }else{
+            do {
+                nextMove = directions[rand() % 4];
+            }while(nextMove == 'S');
+        }
+    }
+    //eger rastgele secilen yon saga ise sagı kontrol et, duvar varsa sag haric bir sey gelene kadar tekrar sectir
+    if(nextMove == 'D'){
+        if(gameMap->matrix[gameMap->userRow][gameMap->userCol + 1] != '1'){
+            nextMove = 'D';
+        }else{
+            do {
+                nextMove = directions[rand() % 4];
+            }while(nextMove == 'D');
+        }
+    }
 
     return nextMove;
 }
