@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include <unistd.h>
-#include <conio.h>
+//#include <conio.h>
 
 
 #define MAX_USERS 10
@@ -12,6 +12,12 @@
 #define MAX_USERNAME_LENGTH 20
 #define MAX_PASSWORD_LENGTH 20
 #define MAX_SCORES 5
+#ifdef _WIN32
+    #define CLEAR_CONSOLE system("cls")
+#else defined(__APPLE__) || defined(__MACH__)
+    #define CLEAR_CONSOLE system("clear")
+#endif
+
 
 // kullanici bilgilerini tutan structure yapisi
 typedef struct User {
@@ -445,7 +451,7 @@ int play(USER *user) {
         gameMap.autoplay = 0;
     }
 
-    system("cls");
+    CLEAR_CONSOLE;
 
     // Game loop
     char move;
@@ -467,7 +473,7 @@ int play(USER *user) {
             printf("Time's up!\n");
             break; // eger sure dolduysa bir sonraki harekette oyunu bitir
         }
-        system("cls");
+        CLEAR_CONSOLE;
     }while(moveUser(&gameMap, move));
 
     printResults(&gameMap);
