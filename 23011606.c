@@ -14,7 +14,7 @@
 #define MAX_SCORES 5
 #ifdef _WIN32
     #define CLEAR_CONSOLE system("cls")
-#else defined(__APPLE__) || defined(__MACH__)
+#elif defined(__APPLE__) || defined(__MACH__)
     #define CLEAR_CONSOLE system("clear")
 #endif
 
@@ -127,6 +127,7 @@ void writeScoreToFile(const USER *user) {
 }
 
 void info(){
+    CLEAR_CONSOLE;
     printf("WELCOME TO THE ANTIMATTER MAZE!\n");
     printf("The paths in the maze contain the following particles.\n");
     printf("P : proton\n"
@@ -137,7 +138,7 @@ void info(){
     printf("If a particle and its antiparticle come together, they annihilate each other.\n");
     printf("Black holes are indicated by K. If you pass through black holes, the game ends\n");
     printf("Walls are indicated by 1 and it is not possible to pass through the walls\n");
-    printf("To move around the maze use 'w' 'a' 's' 'd' keys.\n");
+    printf("To move around the maze use 'w' 'a' 's' 'd' keys. Or if you want to quit use 'q'.\n");
     usleep(10000000); // yazilanlarin okunmasi icin belli bir sure bekle.
 }
 
@@ -375,6 +376,9 @@ bool moveUser(GameMap *gameMap, char move) {
                 printf("Invalid move. Stay within the boundaries or avoid walls.\n");
             }
             break;
+        case 'Q':
+        case 'q':
+            return false;
         default:
             printf("Invalid move. Use W/A/S/D or arrow keys.\n");
             return true;
@@ -463,9 +467,11 @@ int play(USER *user) {
             //1.000.000 = 1 saniye olacak şekilde
             usleep(700000);
         } else {
-            printf("Enter your move (W/A/S/D): ");
+            printf("Enter your move (W/A/S/D) or enter 'Q' to exit: ");
             scanf(" %c", &move);
         }
+
+        CLEAR_CONSOLE;
 
         // sure sinirini kontrol etme
         time_t currentTime = time(NULL);
@@ -473,7 +479,7 @@ int play(USER *user) {
             printf("Time's up!\n");
             break; // eger sure dolduysa bir sonraki harekette oyunu bitir
         }
-        CLEAR_CONSOLE;
+
     }while(moveUser(&gameMap, move));
 
     printResults(&gameMap);
@@ -496,6 +502,7 @@ char autoplayMove(const GameMap *gameMap) {
 }
 
 void printResults(GameMap *gameMap) {
+    CLEAR_CONSOLE;
     printf("\n");
     printf("Collected 'P': %d\n", gameMap->collectedP);
     printf("Collected 'p': %d\n", gameMap->collectedp);
@@ -557,6 +564,7 @@ void printTopScores() {
     }
 
     // en yuksek 5 skoru yazdir
+    CLEAR_CONSOLE;
     printf("\nTop 5 Scores:\n");
     for (i = 0; i < MAX_SCORES; i++) {
         printf("%d. %s: %d\n", i + 1, topScores[i].username, topScores[i].score);
